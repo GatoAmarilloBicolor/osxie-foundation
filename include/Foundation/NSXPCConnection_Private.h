@@ -18,6 +18,7 @@
 */
 
 #include <mach/mach.h>
+#include <xpc/private.h>
 #import <Foundation/NSXPCConnection.h>
 
 @interface NSXPCListenerEndpoint (NSXPCPrivateStuff)

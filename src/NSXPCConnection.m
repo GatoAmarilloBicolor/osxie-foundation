@@ -1177,6 +1177,26 @@ static xpc_object_t __NSXPCCONNECTION_IS_CREATING_REPLY__(xpc_object_t original)
 
 @end
 
+@implementation NSXPCConnection (NSXPCPrivateStuff)
+
+- (audit_token_t) auditToken {
+    audit_token_t token;
+    xpc_connection_get_audit_token(_xpcConnection, &token);
+
+    return token;
+}
+
+- (id) valueForEntitlement:(NSString *)entitlement {
+    // TODO: this is just a workaround for trustdFileHelper
+    if ([entitlement isEqualToString:@"com.apple.private.trustd.FileHelp"]) {
+        return @YES;
+    }
+
+    return nil;
+}
+
+@end
+
 @implementation NSXPCListener
 
 + (instancetype)anonymousListener
