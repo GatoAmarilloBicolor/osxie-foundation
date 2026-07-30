@@ -70,7 +70,7 @@ static os_log_t nstask_get_log(void) {
 	static os_log_t logger = NULL;
 	static dispatch_once_t token;
 	dispatch_once(&token, ^{
-		logger = os_log_create("org.darlinghq.Foundation", "NSTask");
+		logger = os_log_create("org.osxiehq.Foundation", "NSTask");
 	});
 	return logger;
 };
@@ -488,7 +488,7 @@ static void waiterCallback(void* info) {
 #if 0
 		{
 			NSMutableDictionary* tmp = [NSProcessInfo processInfo].environment.mutableCopy;
-			tmp[@"DYLD_INSERT_LIBRARIES"] = @"/usr/lib/darling/libxtrace.dylib";
+			tmp[@"DYLD_INSERT_LIBRARIES"] = @"/usr/lib/osxie/libxtrace.dylib";
 			tmp[@"XTRACE_KPRINTF"] = @"1";
 			env = tmp;
 		}

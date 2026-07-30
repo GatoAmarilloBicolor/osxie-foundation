@@ -12,7 +12,7 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -nostdinc -mmacosx-version-min=10.10 \
 	-include ${CMAKE_SOURCE_DIR}/src/external/corefoundation/CoreFoundation_Prefix.h \
 	-include ${CMAKE_SOURCE_DIR}/src/external/corefoundation/macros.h")
 
-include(darling_framework)
+include(osxie_framework)
 
 include_directories(
 	${CMAKE_SOURCE_DIR}/src/external/corefoundation # for `ForFoundationOnly.h`
@@ -319,8 +319,8 @@ set_property(
 )
 endif (TARGET_x86_64)
 
-add_darling_executable(defaults tools/defaults.m)
+add_osxie_executable(defaults tools/defaults.m)
 target_link_libraries(defaults Foundation)
-install(TARGETS defaults DESTINATION libexec/darling/usr/bin)
-install(FILES tools/defaults.1 DESTINATION libexec/darling/usr/share/man/man1)
+install(TARGETS defaults DESTINATION libexec/osxie/usr/bin)
+install(FILES tools/defaults.1 DESTINATION libexec/osxie/usr/share/man/man1)
 

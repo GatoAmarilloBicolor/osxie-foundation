@@ -4,7 +4,7 @@ include_directories(
 	../../internal_include
 )
 
-add_darling_executable(filecoordinationd
+add_osxie_executable(filecoordinationd
 	daemon.m
 	XPCObject.m
 	FileAccessRequest.m
@@ -15,5 +15,5 @@ target_link_libraries(filecoordinationd
 	Foundation
 )
 
-install(TARGETS filecoordinationd DESTINATION libexec/darling/usr/sbin)
-install(FILES com.apple.FileCoordination.plist DESTINATION libexec/darling/System/Library/LaunchDaemons)
+install(TARGETS filecoordinationd DESTINATION libexec/osxie/usr/sbin)
+install(FILES com.apple.FileCoordination.plist DESTINATION libexec/osxie/System/Library/LaunchDaemons)

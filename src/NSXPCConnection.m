@@ -45,7 +45,7 @@ os_log_t nsxpc_get_log(void) {
     static os_log_t logger = NULL;
     static dispatch_once_t token;
     dispatch_once(&token, ^{
-        logger = os_log_create("org.darlinghq.Foundation", "NSXPC");
+        logger = os_log_create("org.osxiehq.Foundation", "NSXPC");
     });
     return logger;
 };
@@ -201,7 +201,7 @@ os_log_t nsxpc_get_log(void) {
 
 - (void)_createQueueForService: (NSString*)serviceName
 {
-    _queue = dispatch_queue_create([@"org.darlinghq.Foundation.NSXPCConnection." stringByAppendingString: serviceName].UTF8String, dispatch_queue_attr_make_with_autorelease_frequency(NULL, DISPATCH_AUTORELEASE_FREQUENCY_WORK_ITEM));
+    _queue = dispatch_queue_create([@"org.osxiehq.Foundation.NSXPCConnection." stringByAppendingString: serviceName].UTF8String, dispatch_queue_attr_make_with_autorelease_frequency(NULL, DISPATCH_AUTORELEASE_FREQUENCY_WORK_ITEM));
 }
 
 - (void)_setupConnection
@@ -1238,7 +1238,7 @@ static xpc_object_t __NSXPCCONNECTION_IS_CREATING_REPLY__(xpc_object_t original)
 
 - (void)_createQueueForService: (NSString*)serviceName
 {
-    _queue = dispatch_queue_create([@"org.darlinghq.Foundation.NSXPCListener." stringByAppendingString: serviceName].UTF8String, dispatch_queue_attr_make_with_autorelease_frequency(NULL, DISPATCH_AUTORELEASE_FREQUENCY_WORK_ITEM));
+    _queue = dispatch_queue_create([@"org.osxiehq.Foundation.NSXPCListener." stringByAppendingString: serviceName].UTF8String, dispatch_queue_attr_make_with_autorelease_frequency(NULL, DISPATCH_AUTORELEASE_FREQUENCY_WORK_ITEM));
 }
 
 static void process_connection(NSXPCListener* self, xpc_connection_t connection) {

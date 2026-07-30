@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
 
-#define NSXPC_TEST_LAUNCHD_SERVICE_NAME "org.darlinghq.Foundation.nsxpc-test-service"
+#define NSXPC_TEST_LAUNCHD_SERVICE_NAME "org.osxiehq.Foundation.nsxpc-test-service"
 
 @interface SomeCodableObject : NSObject <NSSecureCoding> {
 	NSString* _someString;

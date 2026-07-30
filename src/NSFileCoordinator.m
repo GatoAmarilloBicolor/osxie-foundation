@@ -386,7 +386,7 @@ static void handle_xpc_notification(xpc_object_t message) {
 		if (xpc_get_type(reply) == XPC_TYPE_ERROR || xpc_dictionary_get_uint64(reply, DaemonIntentReplyResultKey) != DaemonIntentReplyResultOk) {
 			FCDebug(@"daemon indicated failure/denial to perform operation");
 			// TODO: more detailed errors
-			errorPointer = [[NSError alloc] initWithDomain: @"org.darlinghq.Foundation.FileCoordination" // bogus error domain
+			errorPointer = [[NSError alloc] initWithDomain: @"org.osxiehq.Foundation.FileCoordination" // bogus error domain
 			                                          code: 1
 			                                      userInfo: nil];
 		} else {
@@ -483,8 +483,8 @@ static void handle_xpc_notification(xpc_object_t message) {
 {
 	filePresentersByPath = [[NSMutableDictionary alloc] init];
 	daemonConnection = xpc_connection_create_mach_service(DAEMON_SERVICE_NAME, NULL, 0);
-	notificationQueue = dispatch_queue_create("org.darlinghq.Foundation.NSFileCoordinator.notification-queue", DISPATCH_QUEUE_CONCURRENT);
-	replyQueue = dispatch_queue_create("org.darlinghq.Foundation.NSFileCoordinator.reply-queue", DISPATCH_QUEUE_CONCURRENT);
+	notificationQueue = dispatch_queue_create("org.osxiehq.Foundation.NSFileCoordinator.notification-queue", DISPATCH_QUEUE_CONCURRENT);
+	replyQueue = dispatch_queue_create("org.osxiehq.Foundation.NSFileCoordinator.reply-queue", DISPATCH_QUEUE_CONCURRENT);
 
 	xpc_connection_set_event_handler(daemonConnection, ^(xpc_object_t object) {
 		xpc_type_t type = xpc_get_type(object);

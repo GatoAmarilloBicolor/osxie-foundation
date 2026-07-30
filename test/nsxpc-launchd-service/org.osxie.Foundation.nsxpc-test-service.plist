@@ -3,12 +3,12 @@
 <plist version="1.0">
 <dict>
 	<key>Label</key>
-	<string>org.darlinghq.Foundation.nsxpc-test-service</string>
+	<string>org.osxiehq.Foundation.nsxpc-test-service</string>
 	<key>Program</key>
 	<string>/usr/libexec/nsxpc_test_launchd_service</string>
 	<key>MachServices</key>
 	<dict>
-		<key>org.darlinghq.Foundation.nsxpc-test-service</key>
+		<key>org.osxiehq.Foundation.nsxpc-test-service</key>
 		<true/>
 	</dict>
 </dict>

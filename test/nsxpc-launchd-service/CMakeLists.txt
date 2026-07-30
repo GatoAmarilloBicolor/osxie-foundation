@@ -1,11 +1,11 @@
-add_darling_static_library(nsxpc_test_launchd_service_common
+add_osxie_static_library(nsxpc_test_launchd_service_common
 	FAT
 	SOURCES
 		common.m
 )
 
-add_darling_executable(nsxpc_test_launchd_service service.m)
-add_darling_executable(nsxpc_test_client client.m)
+add_osxie_executable(nsxpc_test_launchd_service service.m)
+add_osxie_executable(nsxpc_test_client client.m)
 
 # force the classes from the static library to be loaded
 target_link_options(nsxpc_test_launchd_service PRIVATE
@@ -31,12 +31,12 @@ install(
 		nsxpc_test_launchd_service
 		nsxpc_test_client
 	DESTINATION
-		libexec/darling/usr/libexec
+		libexec/osxie/usr/libexec
 )
 
 install(
 	FILES
-		org.darlinghq.Foundation.nsxpc-test-service.plist
+		org.osxiehq.Foundation.nsxpc-test-service.plist
 	DESTINATION
-		libexec/darling/System/Library/LaunchDaemons
+		libexec/osxie/System/Library/LaunchDaemons
 )
