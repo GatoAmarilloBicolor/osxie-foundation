@@ -20,7 +20,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 #import <Foundation/Foundation.h>
 #import <objc/runtime.h>
 
-#ifndef DARLING
+#if !defined(DARLING) && !defined(OSXIE)
 #import <Foundation/NSConditionLock_posix.h>
 #import <Foundation/NSCondition_posix.h>
 #import <Foundation/NSFileHandle_posix.h>
@@ -63,7 +63,7 @@ BOOL NSCurrentLocaleIsMetric() {
 
 @implementation NSPlatform_posix
 
-#ifndef DARLING
+#if !defined(DARLING) && !defined(OSXIE)
 - (Class) taskClass {
     return [NSTask_posix class];
 }
@@ -137,7 +137,7 @@ static struct passwd *pwent = NULL;
 }
 
 - (NSArray *) arguments {
-#ifndef DARLING
+#if !defined(DARLING) && !defined(OSXIE)
     extern int NSProcessInfoArgc;
     extern const char *const *NSProcessInfoArgv;
     NSMutableArray *result = [NSMutableArray array];

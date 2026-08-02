@@ -1,5 +1,5 @@
 /*
- This file is part of Darling.
+ This file is part of Osxie.
 
  Copyright (C) 2020 Lubos Dolezel
 
@@ -1394,8 +1394,8 @@ static void handle_new_connection(xpc_connection_t connection) {
 
 - (void)set_endpoint: (xpc_endpoint_t)endpoint
 {
-    [_endpoint release];
-    _endpoint = [endpoint retain];
+    xpc_release(_endpoint);
+    _endpoint = xpc_retain(endpoint);
 }
 
 @end

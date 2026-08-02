@@ -44,7 +44,7 @@ NSZone *NSZoneFromPointer(void *ptr)
 
 void *NSZoneMalloc(NSZone *zone, NSUInteger size)
 {
-#ifdef DARLING
+#if defined(DARLING) || defined(OSXIE)
     if (zone == nil) {
         return malloc(size);
     }
@@ -54,7 +54,7 @@ void *NSZoneMalloc(NSZone *zone, NSUInteger size)
 
 void *NSZoneCalloc(NSZone *zone, NSUInteger numElems, NSUInteger byteSize)
 {
-#ifdef DARLING
+#if defined(DARLING) || defined(OSXIE)
     if (zone == nil) {
         return calloc(numElems, byteSize);
     }
@@ -64,7 +64,7 @@ void *NSZoneCalloc(NSZone *zone, NSUInteger numElems, NSUInteger byteSize)
 
 void *NSZoneRealloc(NSZone *zone, void *ptr, NSUInteger size)
 {
-#ifdef DARLING
+#if defined(DARLING) || defined(OSXIE)
     if (zone == nil) {
         return realloc(ptr, size);
     }
@@ -74,7 +74,7 @@ void *NSZoneRealloc(NSZone *zone, void *ptr, NSUInteger size)
 
 void NSZoneFree(NSZone *zone, void *ptr)
 {
-#ifdef DARLING
+#if defined(DARLING) || defined(OSXIE)
     if (zone == nil) {
         free(ptr);
     } else

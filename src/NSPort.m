@@ -18,6 +18,7 @@
 #import <mach/mach_port.h>
 #import <mach/vm_map.h>
 #import <mach/mach_init.h>
+#import <mach/mach_error.h>
 #import <libkern/OSAtomic.h>
 
 extern CFMachPortContext *_CFMachPortGetContext(CFMachPortRef mp);

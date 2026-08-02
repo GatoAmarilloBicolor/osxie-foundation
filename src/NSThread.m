@@ -203,7 +203,7 @@ static void NSThreadEnd(NSThread *thread)
         // this is what iOS/Mac OS X seem to do, is this right for other operating systems?
         pthread_attr_setscope(&_attr, PTHREAD_SCOPE_SYSTEM);
         pthread_attr_setdetachstate(&_attr, PTHREAD_CREATE_DETACHED);
-#ifdef DARLING
+#if defined(DARLING) || defined(OSXIE)
         _sharedObjects=[NSMutableDictionary new];
         if(_NSIsMultiThreaded)
             _sharedObjectLock=[NSLock new];
@@ -231,7 +231,7 @@ static void NSThreadEnd(NSThread *thread)
     [_threadDictionary release];
     [_name release];
     pthread_attr_destroy(&_attr);
-#ifdef DARLING
+#if defined(DARLING) || defined(OSXIE)
    id oldSharedObjects=_sharedObjects;
    _sharedObjects=nil;
    [oldSharedObjects release];
@@ -526,7 +526,7 @@ static void NSThreadPerform(id self, SEL aSelector, NSThread *thr, id arg, BOOL 
 
 @end
 
-#ifdef DARLING
+#if defined(DARLING) || defined(OSXIE)
 
 static inline id _NSThreadSharedInstance(NSThread *thread,NSString *className,BOOL create) {
    NSMutableDictionary *shared=thread->_sharedObjects;

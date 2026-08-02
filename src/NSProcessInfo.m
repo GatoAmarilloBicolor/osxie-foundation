@@ -365,7 +365,7 @@ SINGLETON_RR()
 
 @end
 
-#ifdef DARLING
+#if defined(DARLING) || defined(OSXIE)
 
 FOUNDATION_EXPORT
 __attribute__((constructor))

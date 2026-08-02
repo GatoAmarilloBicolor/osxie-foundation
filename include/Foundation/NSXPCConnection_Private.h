@@ -1,5 +1,5 @@
 /*
- This file is part of Darling.
+ This file is part of Osxie.
 
  Copyright (C) 2020 Lubos Dolezel
 
@@ -23,7 +23,7 @@
 
 @interface NSXPCListenerEndpoint (NSXPCPrivateStuff)
 
-@property(retain) xpc_endpoint_t _endpoint;
+@property(assign) xpc_endpoint_t _endpoint;
 
 - (instancetype)_initWithConnection: (xpc_connection_t)connection;
 

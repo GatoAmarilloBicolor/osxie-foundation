@@ -4,7 +4,7 @@
 
 @class NSArray, NSMutableDictionary, NSDate, NSMutableArray;
 
-#ifdef DARLING
+#if defined(DARLING) || defined(OSXIE)
 @class NSLock;
 #endif
 
@@ -33,7 +33,7 @@ typedef enum {
     id _target;
     SEL _selector;
     id _argument;
-#ifdef DARLING
+#if defined(DARLING) || defined(OSXIE)
     // for Cocotron additions (see below)
     NSMutableDictionary *_sharedObjects;
     NSLock *_sharedObjectLock;
@@ -84,7 +84,7 @@ typedef enum {
 
 @end
 
-#ifdef DARLING
+#if defined(DARLING) || defined(OSXIE)
 
 @interface NSThread (CocotronAdditions)
 - (NSMutableDictionary *)sharedDictionary;

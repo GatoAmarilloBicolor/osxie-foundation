@@ -59,6 +59,6 @@ NSOperatingSystemVersion;
 @property(readonly, getter=isiOSAppOnMac) BOOL iOSAppOnMac;
 @end
 
-#ifdef DARLING
+#if defined(DARLING) || defined(OSXIE)
 FOUNDATION_EXPORT void __NSInitializeProcess(int argc,const char *argv[]);
 #endif

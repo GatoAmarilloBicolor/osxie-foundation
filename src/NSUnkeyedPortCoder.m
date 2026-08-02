@@ -1,5 +1,5 @@
 /*
-  This file is part of Darling.
+  This file is part of Osxie.
 
   Copyright (C) 2020 Lubos Dolezel
 
@@ -29,6 +29,7 @@
 #import "NSConnectionInternal.h"
 #import "NSPortCoderUtil.h"
 #import <objc/runtime.h>
+#import <mach/mach.h>
 
 
 @interface NSObject (IsAncestorOfObject)
