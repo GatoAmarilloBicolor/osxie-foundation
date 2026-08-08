@@ -7,6 +7,8 @@
 
 #import <Foundation/NSDecimalNumber.h>
 
+#include <dlfcn.h>
+
 #import "NSValueInternal.h"
 #import "NSCoderInternal.h"
 #import "ForFoundationOnly.h"
@@ -77,7 +79,10 @@ static inline id newDecodedNumber(NSCoder *coder)
             case _C_UCHR:
             {
                 unsigned char val = *(unsigned char*)buffer;
-                return [[NSNumber alloc] initWithUnsignedChar:val];
+                id num = [NSNumber alloc];
+                if (getenv("OSXIE_TRACE_NUMBER"))
+                    fprintf(stderr, "[TRACE decode UCHR] val=%u alloc=%p isa=%p type=%c\n", val, num, *(void**)num, *encodeType);
+                return [num initWithUnsignedChar:val];
             }
             case _C_SHT:
             {
@@ -395,6 +400,17 @@ static inline id newDecodedNumber(NSCoder *coder)
 
 + (NSNumber *)numberWithUnsignedChar:(unsigned char)value
 {
+    if (getenv("OSXIE_TRACE_NUMBER")) {
+        Dl_info info;
+        const char *mod = "?";
+        const char *sym = "?";
+        if (dladdr(__builtin_return_address(0), &info) != 0) {
+            mod = info.dli_fname ? info.dli_fname : "?";
+            sym = info.dli_sname ? info.dli_sname : "?";
+        }
+        fprintf(stderr, "[TRACE numberWithUnsignedChar:] value=%u caller=%p mod=%s sym=%s\n",
+                value, __builtin_return_address(0), mod, sym);
+    }
     return [[[self alloc] initWithUnsignedChar:value] autorelease];
 }
 

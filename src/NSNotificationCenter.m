@@ -12,6 +12,8 @@
 #import "NSNotificationInternal.h"
 #import <dispatch/dispatch.h>
 #import <pthread.h>
+#import <stdio.h>
+#import <objc/runtime.h>
 
 @interface _NSNotificationObserver : NSObject
 {
@@ -148,7 +150,12 @@
             id obj = observer.object;
             if (object == nil || obj == nil || object == obj)
             {
+                if (getenv("OSXIE_TRACE_NOTIFICATION"))
+                    fprintf(stderr, "[TRACE] NSNotificationCenter: delivering '%s' to observer=%p sel=%s\n",
+                            [name UTF8String], observer.observer, sel_getName(observer.selector));
                 [observer postNotification:notification];
+                if (getenv("OSXIE_TRACE_NOTIFICATION"))
+                    fprintf(stderr, "[TRACE] NSNotificationCenter: delivered to observer=%p\n", observer.observer);
             }
         }
     }
