@@ -19,6 +19,8 @@
 #import <unistd.h>
 #import <objc/message.h>
 #import <execinfo.h>
+#import <stdio.h>
+#import <stdlib.h>
 
 CFRunLoopRef _CFRunLoopGet0(pthread_t t);
 CFTypeRef _CFRunLoopGet2(CFRunLoopRef rl);
@@ -57,8 +59,17 @@ CF_PRIVATE
 
 @implementation _NSThreadPerformInfo
 
+static int osxie_perform_trace(void)
+{
+    static int on = -1;
+    if (on < 0) on = (getenv("OSXIE_TRACE_PERFORM") != NULL);
+    return on;
+}
+
 - (void)dealloc
 {
+    if (osxie_perform_trace())
+        fprintf(stderr, "[PERFORM] dealloc info=%p target=%p rc=%lu\n", self, target, (unsigned long)[self retainCount]);
     [target release];
     target = nil;
     [argument release];
@@ -402,8 +413,26 @@ static void __NSThreadInfoPerformer(void *info)
 {
     _NSThreadPerformInfo *performInfo = (_NSThreadPerformInfo *)info;
     @autoreleasepool {
+        [performInfo retain];
         NSThread *t = [NSThread currentThread];
+        if (osxie_perform_trace())
+            fprintf(stderr, "[PERFORM] run info=%p sel=%s target=%p rc=%lu t=%p nperformers=%lu\n",
+                    performInfo, sel_getName(performInfo->selector), performInfo->target,
+                    (unsigned long)[performInfo retainCount], t, (unsigned long)[t->_performers count]);
         [performInfo->target performSelector:performInfo->selector withObject:performInfo->argument];
+        if (osxie_perform_trace())
+            fprintf(stderr, "[PERFORM] selDone info=%p rc=%lu\n", performInfo, (unsigned long)[performInfo retainCount]);
+        for (NSString *mode in performInfo->modes)
+        {
+            CFRunLoopRemoveSource(CFRunLoopGetCurrent(), performInfo->source, (CFStringRef)mode);
+        }
+        performInfo->source = NULL;
+        @synchronized(t) {
+            if (osxie_perform_trace())
+                fprintf(stderr, "[PERFORM] removeObj info=%p rc=%lu nperformers=%lu\n",
+                        performInfo, (unsigned long)[performInfo retainCount], (unsigned long)[t->_performers count]);
+            [t->_performers removeObject:performInfo];
+        }
         if (performInfo->waiter) // this check is to ensure that the signaled variable will not be stale (without interfering with a potentially dead object for the waiter)
         {
             [performInfo->waiter lock];
@@ -411,35 +440,32 @@ static void __NSThreadInfoPerformer(void *info)
             [performInfo->waiter signal];
             [performInfo->waiter unlock];
         }
-        for (NSString *mode in performInfo->modes)
-        {
-            CFRunLoopRemoveSource(CFRunLoopGetCurrent(), performInfo->source, (CFStringRef)mode);
-        }
-        performInfo->source = NULL;
-        @synchronized(t) {
-            [t->_performers removeObject:performInfo];
-        }
+        [performInfo release];
     }
 }
 
 - (void)_nq:(_NSThreadPerformInfo *)info
 {
     @synchronized(self) {
+        if (osxie_perform_trace())
+            fprintf(stderr, "[PERFORM] addObj info=%p sel=%s wait=%d rc=%lu nperformers=%lu\n",
+                    info, sel_getName(info->selector), info->waiter != NULL,
+                    (unsigned long)[info retainCount], (unsigned long)[_performers count]);
         [_performers addObject:info];
     }
     CFRunLoopRef rl = _CFRunLoopGet0(_thread);
+    CFRunLoopSourceContext ctx = {
+        .version = 0,
+        .info = info,
+        .perform = &__NSThreadInfoPerformer,
+    };
+    info->source = CFRunLoopSourceCreate(kCFAllocatorDefault, 0, &ctx);
     for (NSString *mode in info->modes)
     {
-        CFRunLoopSourceContext ctx = {
-            .version = 0,
-            .info = info,
-            .perform = &__NSThreadInfoPerformer,
-        };
-        info->source = CFRunLoopSourceCreate(kCFAllocatorDefault, 0, &ctx);
         CFRunLoopAddSource(rl, info->source, (CFStringRef)mode);
-        CFRelease(info->source);
-        CFRunLoopSourceSignal(info->source);
     }
+    CFRelease(info->source);
+    CFRunLoopSourceSignal(info->source);
     CFRunLoopWakeUp(rl);
 }
 
@@ -499,6 +525,8 @@ static void NSThreadPerform(id self, SEL aSelector, NSThread *thr, id arg, BOOL 
         }
         [info->waiter unlock];
     }
+    if (osxie_perform_trace())
+        fprintf(stderr, "[PERFORM] caller-release info=%p rc=%lu\n", info, (unsigned long)[info retainCount]);
     [info release];
 }
 

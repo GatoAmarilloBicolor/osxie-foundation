@@ -87,7 +87,9 @@ OBJC_PROTOCOL_IMPL_PUSH
         for (NSUInteger idx = 0; idx < count; idx++)
         {
             [coder decodeValueOfObjCType:@encode(id) at:&objects[idx]];
-            [objects[idx] autorelease];
+            if (objects[idx] != nil) {
+                [objects[idx] autorelease];
+            }
         }
     }
 

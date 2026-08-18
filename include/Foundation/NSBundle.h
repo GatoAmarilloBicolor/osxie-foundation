@@ -64,6 +64,7 @@ typedef struct __CFBundle *CFBundleRef;
 - (NSString *)pathForResource:(NSString *)name ofType:(NSString *)ext;
 - (NSString *)pathForResource:(NSString *)name ofType:(NSString *)ext inDirectory:(NSString *)subpath;
 - (NSString *)pathForResource:(NSString *)name ofType:(NSString *)ext inDirectory:(NSString *)subpath forLocalization:(NSString *)localizationName;
+- (id)imageForResource:(NSString *)name NS_AVAILABLE(10_11, 11_0);
 - (NSArray *)pathsForResourcesOfType:(NSString *)ext inDirectory:(NSString *)subpath;
 - (NSArray *)pathsForResourcesOfType:(NSString *)ext inDirectory:(NSString *)subpath forLocalization:(NSString *)localizationName;
 - (NSString *)localizedStringForKey:(NSString *)key value:(NSString *)value table:(NSString *)tableName NS_FORMAT_ARGUMENT(1);

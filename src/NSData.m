@@ -1088,6 +1088,11 @@ OBJC_PROTOCOL_IMPL_POP
     return [self initWithBase64EncodedData:[base64String dataUsingEncoding:NSASCIIStringEncoding] options:options];
 }
 
+- (id)initWithBase64Encoding:(NSString *)base64String
+{
+    return [self initWithBase64EncodedString:base64String options:0];
+}
+
 - (NSString *)base64EncodedStringWithOptions:(NSDataBase64EncodingOptions)options
 {
     return [[NSString alloc] initWithData:[self base64EncodedDataWithOptions:options] encoding:NSASCIIStringEncoding];

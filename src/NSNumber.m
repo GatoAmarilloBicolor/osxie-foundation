@@ -821,3 +821,55 @@ static inline id newDecodedNumber(NSCoder *coder)
 }
 
 @end
+
+@implementation NSConstantIntegerNumber : NSNumber
+
++ (NSNumber *)numberWithChar:(char)value {
+    return [super numberWithChar:value];
+}
+
++ (NSNumber *)numberWithUnsignedChar:(unsigned char)value {
+    return [super numberWithUnsignedChar:value];
+}
+
++ (NSNumber *)numberWithShort:(short)value {
+    return [super numberWithShort:value];
+}
+
++ (NSNumber *)numberWithUnsignedShort:(unsigned short)value {
+    return [super numberWithUnsignedShort:value];
+}
+
++ (NSNumber *)numberWithInt:(int)value {
+    return [super numberWithInt:value];
+}
+
++ (NSNumber *)numberWithUnsignedInt:(unsigned int)value {
+    return [super numberWithUnsignedInt:value];
+}
+
++ (NSNumber *)numberWithLong:(long)value {
+    return [super numberWithLong:value];
+}
+
++ (NSNumber *)numberWithUnsignedLong:(unsigned long)value {
+    return [super numberWithUnsignedLong:value];
+}
+
++ (NSNumber *)numberWithLongLong:(long long)value {
+    return [super numberWithLongLong:value];
+}
+
++ (NSNumber *)numberWithUnsignedLongLong:(unsigned long long)value {
+    return [super numberWithUnsignedLongLong:value];
+}
+
+- (const char *)objCType {
+    return "i";
+}
+
+- (long long)longLongValue {
+    return 0;
+}
+
+@end

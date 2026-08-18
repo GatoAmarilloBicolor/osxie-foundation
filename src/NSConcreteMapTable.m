@@ -1382,9 +1382,12 @@ const NSMapTableValueCallBacks NSOwnedPointerMapValueCallBacks =
 
   if (aKey == nil)
     {
-      [NSException raise: NSInvalidArgumentException
-		  format: @"[%@-%@:] given nil argument",
-        NSStringFromClass([self class]), NSStringFromSelector(_cmd)];
+      // On macOS, NSMapTable tolerates nil keys; some apps (e.g. iTerm2's
+      // iTermVariablesIndex) rely on inserting under a not-yet-resolved key
+      // and re-registering once the key is known. Align with the upstream
+      // GNUstep behavior (and with removeObjectForKey: below): no-op.
+      NSWarnMLog(@"attempt to set object for nil key in map table %@", self);
+      return;
     }
   node = GSIMapNodeForKey(self, (GSIMapKey)aKey);
   if (node)

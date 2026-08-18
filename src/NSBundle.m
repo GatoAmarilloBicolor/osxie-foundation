@@ -397,6 +397,21 @@ static void __NSBundleMainBundleDealloc()
     return [[self URLForResource:name withExtension:ext subdirectory:subpath localization:localizationName] path];
 }
 
+- (id)imageForResource:(NSString *)name
+{
+    NSString *path = [self pathForResource:name ofType:nil];
+    if (path == nil)
+    {
+        return nil;
+    }
+    Class imageClass = NSClassFromString(@"NSImage");
+    if (imageClass == nil)
+    {
+        return nil;
+    }
+    return [[imageClass alloc] initWithContentsOfFile:path];
+}
+
 - (NSDictionary *)infoDictionary
 {
     return (NSDictionary *)CFBundleGetInfoDictionary(_cfBundle);

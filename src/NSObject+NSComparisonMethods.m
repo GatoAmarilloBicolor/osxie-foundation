@@ -21,6 +21,8 @@
 
 #import <Foundation/NSObject.h>
 #import <Foundation/NSArray.h>
+#import <Foundation/NSString.h>
+#import "NSObjectInternal.h"
 
 @interface NSObject (NSComparisonMethods)
 - (BOOL) doesContain: (id) object;
@@ -41,16 +43,94 @@
     {
       if ([self isKindOfClass: [NSArray class]])
 	{
-	  [(NSArray *)self containsObject: object];
+	  return [(NSArray *)self containsObject: object];
 	}
     }
   return NO;
 }
 
+static BOOL NSLikeMatchWithFlags(NSString *receiver, NSString *pattern, NSStringCompareOptions options)
+{
+  NSUInteger rlen = [receiver length];
+  NSUInteger plen = [pattern length];
+
+  if (plen == 0)
+    {
+      return rlen == 0;
+    }
+
+  if ([pattern rangeOfString:@"*"].location == NSNotFound &&
+      [pattern rangeOfString:@"?"].location == NSNotFound)
+    {
+      return [receiver compare: pattern options: options] == NSOrderedSame;
+    }
+
+  const unichar *rchars = malloc((rlen + 1) * sizeof(unichar));
+  const unichar *pchars = malloc((plen + 1) * sizeof(unichar));
+  [receiver getCharacters: (unichar *)rchars range: NSMakeRange(0, rlen)];
+  [pattern getCharacters: (unichar *)pchars range: NSMakeRange(0, plen)];
+
+  BOOL (^matchUnichars)(unichar, unichar) = ^BOOL (unichar a, unichar b) {
+    if (a == b)
+      {
+        return YES;
+      }
+    if ((options & NSCaseInsensitiveSearch) != 0)
+      {
+        return [[NSString stringWithCharacters: &a length: 1] caseInsensitiveCompare: [NSString stringWithCharacters: &b length: 1]] == NSOrderedSame;
+      }
+    return NO;
+  };
+
+  /* Greedy wildcard matcher with backtracking (SQL LIKE semantics:
+     '*' matches any sequence, '?' matches a single character). */
+  NSUInteger i = 0;
+  NSUInteger j = 0;
+  NSUInteger starR = NSNotFound;
+  NSUInteger starP = NSNotFound;
+
+  while (i < rlen)
+    {
+      if (j < plen && pchars[j] == '*')
+        {
+          starR = i;
+          starP = j++;
+        }
+      else if (j < plen && (pchars[j] == '?' || matchUnichars(rchars[i], pchars[j])))
+        {
+          i++;
+          j++;
+        }
+      else if (starP != NSNotFound)
+        {
+          i = ++starR;
+          j = starP + 1;
+        }
+      else
+        {
+          break;
+        }
+    }
+
+  while (j < plen && pchars[j] == '*')
+    {
+      j++;
+    }
+
+  BOOL result = (i == rlen && j == plen);
+
+  free((void *)rchars);
+  free((void *)pchars);
+  return result;
+}
+
 - (BOOL) isCaseInsensitiveLike: (id) object
 {
-  NSLog(@"%@ not implemented yet", NSStringFromSelector(_cmd));
-  return NO;
+  if (![self isNSString__] || ![object isNSString__])
+    {
+      return NO;
+    }
+  return NSLikeMatchWithFlags((NSString *)self, (NSString *)object, NSCaseInsensitiveSearch);
 }
 
 - (BOOL) isEqualTo: (id) object
@@ -82,8 +162,11 @@
 
 - (BOOL) isLike: (NSString *)object
 {
-  NSLog(@"%@ not implemented yet", NSStringFromSelector(_cmd));
-  return NO;
+  if (![self isNSString__] || ![object isNSString__])
+    {
+      return NO;
+    }
+  return NSLikeMatchWithFlags((NSString *)self, object, 0);
 }
 
 - (BOOL) isNotEqualTo: (id) object

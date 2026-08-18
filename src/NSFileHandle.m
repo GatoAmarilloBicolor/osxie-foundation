@@ -1430,6 +1430,18 @@ CF_PRIVATE
 	[super dealloc];
 }
 
+- (id)copyWithZone:(NSZone *)zone
+{
+	// A pipe's copy shares the underlying file descriptors (shallow copy),
+	// matching macOS behavior. The file handles themselves are also shallow
+	// (NSConcreteFileHandle copyWithZone: retains self). NSAllocateObject
+	// zero-initializes, so no -init is needed (it would allocate fresh fds).
+	NSConcretePipe *copy = NSAllocateObject([self class], 0, zone);
+	copy->_readHandle = [_readHandle retain];
+	copy->_writeHandle = [_writeHandle retain];
+	return copy;
+}
+
 - (instancetype)init
 {
 	if (self = [super init]) {

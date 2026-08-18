@@ -383,3 +383,19 @@ OBJC_PROTOCOL_IMPL_POP
 }
 
 @end
+
+@implementation NSConstantDictionary : NSDictionary
+
+- (NSUInteger)count {
+    return 0;
+}
+
+- (id)objectForKey:(id)aKey {
+    return nil;
+}
+
+- (NSEnumerator*)keyEnumerator {
+    return nil;
+}
+
+@end

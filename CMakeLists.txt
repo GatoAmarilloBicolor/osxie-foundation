@@ -126,6 +126,7 @@ set(foundation_sources
 	src/NSNotificationQueue.m
 	src/NSNumberFormatter.m
 	src/NSNumber.m
+	src/SwiftBridgeStubs.m
 	src/NSObjCRuntime.m
 	src/NSObjectInternal.m
 	src/NSObject+NSComparisonMethods.m
