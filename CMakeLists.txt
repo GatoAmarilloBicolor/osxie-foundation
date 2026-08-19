@@ -203,7 +203,16 @@ set(foundation_sources
 	src/NSUndoManager.m
 	src/NSUserActivity.m
 	src/NSUserDefaults.m
+	src/NSUserActivity.m
 	src/NSURLComponents.m
+	src/NSURLDownload.m
+	src/NSURLRequest.m
+	src/NSURLConnection.m
+	src/NSHTTPCookieConstants.m
+	src/NSHTTPCookieStorage.m
+	src/CFNetworkBridge.m
+	src/NSURLSession.m
+	src/NSURLResponse.m
 	src/NSURLError.m
 	# src/NSURLHandle.m # deprecated since 10.4, from GNUstep
 	src/NSURL.m
@@ -313,12 +322,10 @@ add_separated_framework(Foundation
 # 	TARGET CoreFoundation_i386 APPEND_STRING PROPERTY
 # 	LINK_FLAGS " -Wl,-reexported_symbols_list,${CMAKE_CURRENT_SOURCE_DIR}/reexport_i386.exp")
 # endif (TARGET_i386)
-if (TARGET_x86_64)
-set_property(
-	TARGET Foundation_x86_64 APPEND_STRING PROPERTY
-	LINK_FLAGS " -Wl,-reexported_symbols_list,${CMAKE_CURRENT_SOURCE_DIR}/reexport_x86_64.exp"
-)
-endif (TARGET_x86_64)
+# Reexport list removed: cctools-port ld64 treats -reexported_symbols_list as
+# -exported_symbols_list, preventing Foundation's own symbols (Swift bridge stubs)
+# from appearing in the export trie. Without this flag, all CoreFoundation/libobjc
+# symbols are re-exported (matching real macOS behavior).
 
 add_osxie_executable(defaults tools/defaults.m)
 target_link_libraries(defaults Foundation)
