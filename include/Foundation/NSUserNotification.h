@@ -18,8 +18,34 @@
 */
 
 #import <Foundation/NSString.h>
+#import <Foundation/NSDictionary.h>
 
-@interface NSUserNotification : NSObject <NSCopying>
+typedef NS_ENUM(NSInteger, NSUserNotificationActivationType) {
+    NSUserNotificationActivationTypeNone = 0,
+    NSUserNotificationActivationTypeContentsClicked = 1,
+    NSUserNotificationActivationTypeActionButtonClicked = 2,
+    NSUserNotificationActivationTypeReplied = 3,
+};
+
+@interface NSUserNotification : NSObject <NSCopying> {
+    NSString *_title;
+    NSString *_informativeText;
+    NSString *_soundName;
+    NSString *_actionButtonTitle;
+    NSDictionary *_userInfo;
+    BOOL _hasActionButton;
+    BOOL _presented;
+    NSUserNotificationActivationType _activationType;
+    id _uniqueId;
+}
+@property(copy) NSString *title;
+@property(copy) NSString *informativeText;
+@property(copy) NSString *soundName;
+@property(copy) NSString *actionButtonTitle;
+@property(copy) NSDictionary *userInfo;
+@property BOOL hasActionButton;
+@property(readonly, getter=isPresented) BOOL presented;
+@property(readonly) NSUserNotificationActivationType activationType;
 @end
 
 @interface NSUserNotificationAction : NSObject <NSCopying>

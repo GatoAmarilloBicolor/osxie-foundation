@@ -18,6 +18,7 @@ include_directories(
 	${CMAKE_SOURCE_DIR}/src/external/corefoundation # for `ForFoundationOnly.h`
 	${CMAKE_CURRENT_SOURCE_DIR}/include/Foundation
 	${CMAKE_CURRENT_SOURCE_DIR}/src
+	${CMAKE_SOURCE_DIR}/src/dbus # for osxie_dbus.h
 )
 
 add_definitions(
@@ -307,12 +308,15 @@ add_separated_framework(Foundation
 	SOURCES
 		${foundation_sources}
 	VERSION ${FRAMEWORK_VERSION}
+	OBJECTS
+		$<TARGET_OBJECTS:osxie_dbus_obj>
 	DEPENDENCIES
 		objc
 		system
 		CoreFoundation
 		CFNetwork_firstpass
 		xml2
+		dbus
 	LINK_FLAGS " -Wl,-reexport_library,${CMAKE_BINARY_DIR}/src/external/corefoundation/CoreFoundation \
 				-Wl,-reexport_library,${CMAKE_BINARY_DIR}/src/external/objc4/runtime/libobjc.A.dylib"
 )

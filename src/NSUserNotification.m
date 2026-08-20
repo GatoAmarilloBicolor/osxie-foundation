@@ -18,13 +18,34 @@
 */
 
 #import <Foundation/NSUserNotification.h>
+#import <Foundation/NSBundle.h>
+#import <Foundation/NSProcessInfo.h>
+
+extern int osxie_dbus_portal_notify(void *portal, const char *app_name,
+                                    const char *summary, const char *body,
+                                    const char *icon_name);
 
 @implementation NSUserNotification
 
+@synthesize title = _title;
+@synthesize informativeText = _informativeText;
+@synthesize soundName = _soundName;
+@synthesize actionButtonTitle = _actionButtonTitle;
+@synthesize userInfo = _userInfo;
+@synthesize hasActionButton = _hasActionButton;
+@synthesize presented = _presented;
+@synthesize activationType = _activationType;
+
 - (id)copyWithZone:(NSZone *)zone
 {
-	NSLog(@"[NSUserNotification copyWithZone:]");
-	return nil;
+	NSUserNotification *copy = [[NSUserNotification alloc] init];
+	copy.title = _title;
+	copy.informativeText = _informativeText;
+	copy.soundName = _soundName;
+	copy.actionButtonTitle = _actionButtonTitle;
+	copy.userInfo = _userInfo;
+	copy.hasActionButton = _hasActionButton;
+	return copy;
 }
 
 @end
@@ -33,7 +54,6 @@
 
 - (id)copyWithZone:(NSZone *)zone
 {
-	NSLog(@"[NSUserNotificationAction copyWithZone:]");
 	return nil;
 }
 
@@ -49,16 +69,26 @@ static NSUserNotificationCenter *_defaultUserNotificationCenter = nil;
 	if (_defaultUserNotificationCenter == nil) {
 		_defaultUserNotificationCenter = [[NSUserNotificationCenter alloc] init];
 	}
-
 	return _defaultUserNotificationCenter;
 }
 
 - (void)deliverNotification:(NSUserNotification *)notification {
-	NSLog(@"[NSUserNotificationCenter deliverNotification:]");
+	if (!notification) return;
+
+	const char *appName = [[[NSBundle mainBundle] infoDictionary][@"CFBundleName"] UTF8String];
+	if (!appName) appName = [[[NSProcessInfo processInfo] processName] UTF8String];
+	const char *title = [notification.title UTF8String];
+	const char *body = [notification.informativeText UTF8String];
+
+	if (osxie_dbus_portal_notify) {
+		osxie_dbus_portal_notify(NULL, appName,
+			title ? title : "",
+			body ? body : "",
+			"");
+	}
 }
 
 - (void)removeDeliveredNotification:(NSUserNotification *)notification {
-	NSLog(@"[NSUserNotificationCenter removeDeliveredNotification:]");
 }
 
 @end
