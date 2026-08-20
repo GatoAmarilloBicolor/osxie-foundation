@@ -27,6 +27,22 @@ static NSAppleEventManager* instance = nil;
     NSLog(@"Stub called: %@ in %@", NSStringFromSelector([anInvocation selector]), [self class]);
 }
 
+- (NSAppleEventDescriptor *)appleEventForSuspensionID:(NSAppleEventManagerSuspensionID)suspensionID {
+    return nil;
+}
+
+- (NSAppleEventDescriptor *)currentAppleEvent {
+    return nil;
+}
+
+- (NSAppleEventDescriptor *)currentReplyAppleEvent {
+    return nil;
+}
+
+- (NSAppleEventDescriptor *)replyAppleEventForSuspensionID:(NSAppleEventManagerSuspensionID)suspensionID {
+    return nil;
+}
+
 - (void) setEventHandler: (id) handler
              andSelector: (SEL) selector
            forEventClass: (AEEventClass) eventClass
